@@ -17,6 +17,9 @@
 // Решение
 
 const shallowMerge = function (obj1, obj2) {
+    if(Object.prototype.toString.call(obj1) !== '[object Object]' || Object.prototype.toString.call(obj2) !== '[object Object]') {
+        throw new Error('The function parameter has to be an object');
+    }
 
     const newObj = Object.defineProperties({}, Object.getOwnPropertyDescriptors(obj1));
     const result = Object.defineProperties(newObj, Object.getOwnPropertyDescriptors(obj2));
@@ -27,13 +30,16 @@ const shallowMerge = function (obj1, obj2) {
 const user = { firstName: 'Marcus', lastName: 'Kronenberg' };
 const userData = { job: 'developer', country: 'Germany', lastName: 'Schmidt' };
 
+
 Object.defineProperty(user, 'firstName', { writable: false });
 Object.defineProperty(userData, 'job', { configurable: false });
 
 const result = shallowMerge(user, userData);
 
 console.log(result); // { firstName: 'Marcus', lastName: 'Schmidt', job: 'developer', country: 'Germany' }
+
 console.log(Object.getOwnPropertyDescriptor(result, 'firstName').writable); // false
 console.log(Object.getOwnPropertyDescriptor(result, 'job').configurable); // false
+
 
 exports.shallowMerge = shallowMerge;
